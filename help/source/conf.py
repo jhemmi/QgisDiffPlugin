@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Diff documentation build configuration file, created by
+# whereami documentation build configuration file, created by
 # sphinx-quickstart on Sun Feb 12 17:11:03 2012.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -40,8 +40,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Diff'
-copyright = u'2013, jhemmi.eu'
+project = u'whereami'
+copyright = u'2012, gsherman'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -74,7 +74,7 @@ exclude_patterns = []
 
 # If true, the current module name will be prepended to all description
 # unit titles (such as .. function::).
-#add_TemplateModuleNames = True
+#add_module_names = True
 
 # If true, sectionauthor and moduleauthor directives will be shown in the
 # output. They are ignored by default.
@@ -164,7 +164,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'TemplateClassdoc'
+htmlhelp_basename = 'templateclassdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -178,8 +178,8 @@ htmlhelp_basename = 'TemplateClassdoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'Diff.tex', u'Diff Documentation',
-   u'jhemmi.eu', 'manual'),
+  ('index', 'whereami.tex', u'whereami Documentation',
+   u'gsherman', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -211,6 +211,6 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'TemplateClass', u'Diff Documentation',
-     [u'jhemmi.eu'], 1)
+    ('index', 'templateclass', u'whereami Documentation',
+     [u'gsherman'], 1)
 ]

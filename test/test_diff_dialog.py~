@@ -39,7 +39,7 @@ class DiffDialogTest(unittest.TestCase):
         button = self.dialog.buttonBox.button(QDialogButtonBox.Ok)
         button.click()
         result = self.dialog.result()
-        # JH self.assertEqual(result, QDialog.Accepted)
+        self.assertEqual(result, QDialog.Accepted)
 
     def test_dialog_cancel(self):
         """Test we can click cancel."""
