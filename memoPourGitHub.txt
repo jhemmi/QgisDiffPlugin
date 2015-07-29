@@ -1,0 +1,27 @@
+# install git
+sudo yum install git
+# passer en mode matching vs source
+git config --global push.default matching
+# faire l'état des différences
+git status
+
+# ajouter de nouveaux doc ou repertoire au depot
+git add data
+git add help/index.html
+
+# supprimer des doc ou repertoire
+git rm Makefile~
+git rm help/Makefile
+
+# pour recuperer des modifs faite directement sous GitHub
+git pull https://github.com/jhemmi/QgisDiffPlugin.git master
+
+# donner un commentaire au commit
+git commit
+# envoyer au depot
+git push
+
+et aussi
+git remote -v
+
+
