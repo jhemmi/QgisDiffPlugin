@@ -29,6 +29,7 @@ from diff_dialog import DiffDialog
 import os
 import os.path
 
+
 class Diff:
     """QGIS Plugin Implementation."""
 
@@ -46,6 +47,7 @@ class Diff:
         self.plugin_dir = os.path.dirname(__file__)
         # initialize locale
         locale = QSettings().value('locale/userLocale')[0:2]
+  
         locale_path = os.path.join(
             self.plugin_dir,
             'i18n',
@@ -60,11 +62,15 @@ class Diff:
 
         # Create the dialog (after translation) and keep reference
         self.dlg = DiffDialog()
-
+        # TODO: Find what's wrong nothing translate...
+##        self.dlg.diff_log( "Locale is " + locale)
+##        self.dlg.diff_log( "qtVersion " + str(qVersion()))
+##        self.dlg.diff_log( "Locale path is " + locale_path)
+        
         # Declare instance attributes
         self.actions = []
         self.menu = self.tr(u'&Diff')
-        # TODO: We are going to let the user set this up in a future iteration
+        # TODO: Plugin creator will let the user set this up in a future iteration
         self.toolbar = self.iface.addToolBar(u'Diff')
         self.toolbar.setObjectName(u'Diff')
 
@@ -138,6 +144,7 @@ class Diff:
         icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
         action.triggered.connect(callback)
+        
         action.setEnabled(enabled_flag)
 
         if status_tip is not None:
@@ -167,8 +174,8 @@ class Diff:
             text=self.tr(u'Diff between a vector and a text file'),
             callback=self.run,
             parent=self.iface.mainWindow())
-
-
+              
+        
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
@@ -185,105 +192,8 @@ class Diff:
         # show the dialog
         self.dlg.show()
         # Run the dialog event loop
-        result = self.dlg.exec_()
+        result = self.dlg.exec_
         # See if OK was pressed
         if result:
-            # Do something useful here - delete the line containing pass and
-            # substitute with your code.
-            QMessageBox.information( self, self.tr( "IN RUN Diff vector/txt" ),
-                                       self.tr( "in RUN" ) )
-            
-            """Verify when bouton is OK"""
-            if self.inputLayerComboONE.currentText() == "":
-                return QMessageBox.information( self, self.tr( "Diff vector/txt" ),
-                                       self.tr( "No input layer specified" ) )
-            elif self.editOTHERfile.text() == "":
-                QMessageBox.information( self, self.tr( "Diff vector/txt" ),
-                                       self.tr( "Please specify other file" ) )
-            else:
-              
-                self.listWidget.clear()
-                oneField = self.fieldComboONE.currentText()
-                oneLayer = self.get_layer_by_name( self.inputLayerComboONE.currentText())
-                otherFile = self.editOTHERfile.text()
-                otherField = self.fieldComboOTHER.currentText()
-                separator_print = self.editSeparateur.text()
-                # Find separator position
-                position = SEPARATORS_PRINT.index( separator_print) 
-                #self.diff_log( "Position in SEPARATORS_PRINT " + str( position))
-                separator = SEPARATORS[ position]
-                self.diff_log( "Position in SEPARATORS is " + str( separator))
-                QApplication.setOverrideCursor( QCursor( Qt.WaitCursor ) )
-                # TODO self.btnOk.setEnabled( False )
-                self.jhemmi_DIFF( oneLayer, oneField, otherFile, otherField, separator)
-                
-    ##            self.iface.messageBar().pushMessage(
-    ##                "DIFF plugin",
-    ##                "End of diff, see you later",
-    ##                level=QgsMessageBar.INFO)          
-                self.diff_message_box( self.tr( "End of DIFF, see you later"), "information" )
-                # TODO 
-                self.restoreGui()
- 
-    def jhemmi_DIFF( self, layer, field, fileName, fieldInFile, separator):
-        """Real diff is here"""
-
-        self.diff_write_in_list( 'Your fields to compare are "' + field +
-                                  '" and "'+ fieldInFile + '"')
-
-        ### Find list of values in one Vector File
-        # get unique values in field
-        uniqueValues = []
-        for ft in layer.getFeatures():
-            if ft[ field ] not in uniqueValues:
-                uniqueValues.append( ft[field])
-                
-        ### Find list of values in other File
-        fileValues = self.get_file_field_values( fileName, fieldInFile, separator)
-
-        # Which Radio bouton is checked : radioButton_2 radioButton_3 
-##        self.diff_log( " Radio Button 2 " +
-##                                  str( self.radioButton_2.isChecked()))
-##        self.diff_log( " Radio Button 3 " +
-##                                  str( self.radioButton_3.isChecked()))
-
-        if self.radioButton_1.isChecked():
-            # Compare list ONE not in OTHER
-            self.diff_log( " COMPARE>" + "Diff vector not in text file")
-            apriori = "OUI"
-            erreur = []
-            for iv in range( len( uniqueValues )):
-                if uniqueValues[ iv] not in fileValues:
-                    self.diff_log( "Ligne du shape >" + 
-                        uniqueValues[iv] + "< is not in file")   
-                    apriori = "NON"
-                    erreur.append( str( uniqueValues[iv]))
-            if apriori == "OUI":
-                self.diff_write_in_list( "All in the Vector are in the TextFile") 
-            else:
-                self.diff_write_in_list( "Number of " + 
-                        field + " not found in " + 
-                        fieldInFile + " ==> " + str( len(erreur))+ " <== ")
-                for i in range( len( erreur)):
-                    self.diff_write_in_list( str( erreur[ i]))
-          
-        elif self.radioButton_2.isChecked():
-            # Compare list OTHER NOT in ONE
-            self.diff_log( " COMPARE>" + "Diff text file not in vector")
-            apriori = "OUI"
-            erreur = []
-            for iv in range( len(fileValues)):
-                if fileValues[ iv] not in uniqueValues:
-                    self.diff_log( "Ligne du shape >" + fileValues[iv] + "< is not in file")   
-                    apriori = "NON"
-                    erreur.append( str( fileValues[iv]))
-            if apriori == "OUI":
-                self.diff_write_in_list( "All in the TextFile value are in the Vector") 
-            else:
-                self.diff_write_in_list( "Number of " + fieldInFile + " not found in " + field + " ==> " + str( len(erreur))+ " <== ")
-                for i in range( len( erreur)):
-                    self.diff_write_in_list( str( erreur[ i]))
-        else:
-            self.diff_log( " COMPARE>" + "Diff vector/txt: Cette partie n'est pas implementee")
-        return
-
+            # Do something useful here after dialog
+            pass

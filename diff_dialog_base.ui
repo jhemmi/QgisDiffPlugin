@@ -6,12 +6,27 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>551</width>
-    <height>576</height>
+    <width>540</width>
+    <height>671</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>10</pointsize>
+    <kerning>true</kerning>
+   </font>
   </property>
   <property name="windowTitle">
    <string>Diff between a vector and a text file</string>
+  </property>
+  <property name="toolTip">
+   <string notr="true"/>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedKingdom"/>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
   </property>
   <widget class="QLabel" name="label">
    <property name="geometry">
@@ -59,15 +74,18 @@
     <rect>
      <x>170</x>
      <y>220</y>
-     <width>156</width>
+     <width>191</width>
      <height>23</height>
     </rect>
+   </property>
+   <property name="accessibleDescription">
+    <string/>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
    </property>
    <property name="centerButtons">
     <bool>true</bool>
@@ -225,39 +243,40 @@
    <property name="text">
     <string>Separator</string>
    </property>
+   <property name="buddy">
+    <cstring>editSeparateur</cstring>
+   </property>
   </widget>
-  <widget class="QListWidget" name="listWidget">
+  <widget class="QTextEdit" name="textEdit">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>0</x>
      <y>250</y>
      <width>521</width>
-     <height>311</height>
+     <height>411</height>
     </rect>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::DefaultContextMenu</enum>
    </property>
    <property name="acceptDrops">
     <bool>false</bool>
    </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
+   <property name="textInteractionFlags">
+    <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
    </property>
-   <property name="verticalScrollBarPolicy">
-    <enum>Qt::ScrollBarAlwaysOn</enum>
+  </widget>
+  <widget class="QPushButton" name="refreshButton">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>10</y>
+     <width>111</width>
+     <height>21</height>
+    </rect>
    </property>
-   <property name="autoScroll">
-    <bool>true</bool>
-   </property>
-   <property name="editTriggers">
-    <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
-   </property>
-   <property name="dragDropOverwriteMode">
-    <bool>true</bool>
-   </property>
-   <property name="dragDropMode">
-    <enum>QAbstractItemView::DragOnly</enum>
-   </property>
-   <property name="selectionMode">
-    <enum>QAbstractItemView::ContiguousSelection</enum>
+   <property name="text">
+    <string>Refresh vectors</string>
    </property>
   </widget>
  </widget>

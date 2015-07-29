@@ -30,14 +30,19 @@ from qgis.gui import *
 import os.path
 import sys, string
 import platform
-
+if platform.system() == 'Windows':
+    import win32api
+    
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'diff_dialog_base.ui'))
+    
+# TODO: pour V1 Deux fenetres opur les 2 comparaisons ?
+# TODO: pour V1 Ajouter autres attributs dans la fenetre résultats.
 
-DIFF_TRACE = "Yes" # "Yes" pour tracer
+DIFF_TRACE = "Yes" # "Yes" for tracking
 SEPARATORS = [ ";", "\t", "|", ","]
 SEPARATORS_PRINT = [ ";", "TAB", "|", ","]
- 
+
 class DiffDialog(QtGui.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
         """Constructor."""
@@ -48,18 +53,25 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
-        
+        self.plugin_dir = os.path.dirname(__file__)  
+              
         # Slot for boutons 
+        self.refreshButton.pressed.connect(self.create_vector_list )
         self.buttonBox.button( QDialogButtonBox.Ok ).pressed.connect(self.accept)
         self.buttonBox.button( QDialogButtonBox.Cancel ).pressed.connect(self.reject)
-        
+        self.buttonBox.button( QDialogButtonBox.Help ).pressed.connect(self.helpRequested)
+            
         # Slot for fields & text file
         self.inputLayerComboONE.currentIndexChanged[int].connect( self.update_field_list )
         self.toolFileButtonOTHER.pressed.connect( self.input_textfile )  
-
         self.diff_log( "Your machin runs a " + platform.system() + " operating system")
+
+##        # Memorising the project
+##        titleProject = QgsProject.instance().title()
+##        filenameProject = QFileInfo( QgsProject.instance().fileName())
+        
         # Creating vector list in combo
-        self.create_vector_list()
+        self.create_vector_list()        
         
     # MESSAGES & LOG
     def diff_message_box( self, text, level ="warning", title="DIFF plugin",):
@@ -71,14 +83,6 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
         else:
             QMessageBox.warning( self, title, text)
 
-##    def showHelp(self):
-##""" TODO Help html""" 
-## TODO à creer
-##        file = inspect.getsourcefile(ContourDialog)
-##        file = 'file://' + os.path.join(os.path.dirname(__file__),'html/index.html')
-##        file = file.replace("\\","/")
-##        self._iface.openURL(file,False)
-
     def diff_log( self, aText, level ="WARNING"):
         """Send a text to the Diff log"""
         if DIFF_TRACE == "Yes":
@@ -89,16 +93,18 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
         if platform.system() == "Windows":
             info = aText.split( "\r\n" )        
         else:
-             info = aText.split( "\n" )        
-        self.listWidget.addItems( info )
-                
+            info = aText.split( "\n" )
+        for aInfo in info:
+            self.textEdit.insertPlainText( aInfo + "\n")   
+                                        
     # VECTORS
     def create_vector_list( self ):
         """Create a list of vector and initialize the comboONE"""
         layers = self.get_vector_layers()
         if len( layers) == 0:
+            self.inputLayerComboONE.setCurrentIndex( 0)
             self.diff_log( "DIFF create_vector_list> No layer")
-            # TODO throw a box and remove dialog
+        self.inputLayerComboONE.clear( )
         self.inputLayerComboONE.addItems( layers )
         self.inputLayerComboONE.setCurrentIndex( 0)
 
@@ -109,6 +115,7 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
         for name, layer in layerMap.iteritems():
             if layer.type() == QgsMapLayer.VectorLayer:
                 layerList.append( layer.name() )
+                
         return layerList
                 
     # FIELDS
@@ -139,7 +146,9 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
     # TEXT FILE
     def input_textfile( self ):
         """ Catch name of text file """
-        fileName = QFileDialog.getOpenFileName(None, "Select your Text File:", "", "*.csv *.txt")
+        fileName = QFileDialog.getOpenFileName(None, 
+            "Select your Text File:",
+            "", "*.csv *.txt")
         if len( fileName) == 0:
           return
         self.editOTHERfile.setText( fileName )
@@ -185,7 +194,7 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
 
         # Look for fields
         fields_name = string.split( first_line, the_separator)    
-        self.diff_log( "Fields >" + str( fields_name))
+        self.diff_log( "Fields >" + str( fields_name) + "<")
         return the_separator_print, fields_name
 
     def get_separator( self, aline, recall = 0 ):
@@ -221,7 +230,7 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
                 pos = i
                 break
 
-        self.diff_log( "Field is " + field + " in position " + str( pos))
+        #self.diff_log( "Field " + field + " is in position " + str( pos))
 
         found = []
         for a_line in a_list[ 1:]:
@@ -234,13 +243,20 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
 
         return found
 
+    # Slots
+    def helpRequested(self):
+        """ Help html""" 
+        # file = inspect.getsourcefile( Diff)
+        help_url = QUrl("file:///%s/help/index.html" % self.plugin_dir)
+        QDesktopServices.openUrl(help_url)
+
     def reject( self ):
         """Close when bouton is Cancel"""
-        QDialog.reject( self )
-
+        self.textEdit.clear()
+        QDialog.reject( self)
+                
     def accept( self ):
         """Verify when bouton is OK"""
-        pass
         if self.inputLayerComboONE.currentText() == "":
             return QMessageBox.information( self, self.tr( "Diff vector/txt" ),
                                    self.tr( "No input layer specified" ) )
@@ -249,7 +265,7 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
                                    self.tr( "Please specify other file" ) )
         else:
           
-            self.listWidget.clear()
+            self.textEdit.clear()
             oneField = self.fieldComboONE.currentText()
             oneLayer = self.get_layer_by_name( self.inputLayerComboONE.currentText())
             otherFile = self.editOTHERfile.text()
@@ -260,8 +276,9 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
             #self.diff_log( "Position in SEPARATORS_PRINT " + str( position))
             separator = SEPARATORS[ position]
             self.diff_log( "Position in SEPARATORS is " + str( separator))
-            QApplication.setOverrideCursor( QCursor( Qt.WaitCursor ) )
-            # TODO self.btnOk.setEnabled( False )
+            # QApplication.setOverrideCursor( QCursor( Qt.WaitCursor ) )
+            # TODO 
+            self.buttonBox.button( QDialogButtonBox.Ok ).setEnabled( False )
             self.jhemmi_DIFF( oneLayer, oneField, otherFile, otherField, separator)
             
 ##            self.iface.messageBar().pushMessage(
@@ -269,12 +286,69 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
 ##                "End of diff, see you later",
 ##                level=QgsMessageBar.INFO)          
             self.diff_message_box( self.tr( "End of DIFF, see you later"), "information" )
-            # TODO 
-            self.restoreGui()
+        # In all case Gui is back in the inital state 
+        self.restoreGui()
           
 
     def restoreGui( self ):
-        QApplication.restoreOverrideCursor()
-        self.btnOk.setEnabled( True )
+        # QApplication.restoreOverrideCursor()
+        self.buttonBox.button( QDialogButtonBox.Ok ).setEnabled( True )
         return
-        
+    
+    def jhemmi_DIFF( self, layer, field, fileName, fieldInFile, separator):
+        """Real diff is here"""
+
+        self.diff_write_in_list( 'Compared fields are "' + field +
+                                  '" in vector and "'+ fieldInFile + '" in TextFile')
+
+        ### Find list of values in one Vector File
+        # get unique values in field
+        uniqueValues = []
+        for ft in layer.getFeatures():
+            if ft[ field ] not in uniqueValues:
+                uniqueValues.append( ft[field])
+                
+        ### Find list of values in other File
+        fileValues = self.get_file_field_values( fileName, fieldInFile, separator)
+
+        # Which Radio bouton is checked :  
+        if self.radioButton_1.isChecked():
+            # Compare list ONE not in OTHER
+            self.diff_log( " COMPARE>" + "Diff vector not in text file")
+            apriori = "OUI"
+            erreur = []
+            for iv in range( len( uniqueValues )):
+                if uniqueValues[ iv] not in fileValues:
+                    #self.diff_log( "Line of vector >" + 
+                    #    uniqueValues[iv] + "< is not in file")   
+                    apriori = "NON"
+                    erreur.append( str( uniqueValues[iv]))
+            if apriori == "OUI":
+                self.diff_write_in_list( "All in the Vector are in the TextFile") 
+            else:
+                self.diff_write_in_list( "Number of differences ==> " + 
+                    str( len(erreur))+ " <== ")
+                for i in range( len( erreur)):
+                    self.diff_write_in_list( str( erreur[ i]))
+          
+        elif self.radioButton_2.isChecked():
+            # Compare list OTHER NOT in ONE
+            self.diff_log( " COMPARE>" + "Diff text file not in vector")
+            apriori = "OUI"
+            erreur = []
+            for iv in range( len(fileValues)):
+                if fileValues[ iv] not in uniqueValues:
+                    #self.diff_log( "Line of file >" + 
+                    #    fileValues[iv] + "< is not in vector")   
+                    apriori = "NON"
+                    erreur.append( str( fileValues[iv]))
+            if apriori == "OUI":
+                self.diff_write_in_list( "All in the TextFile value are in the Vector") 
+            else:
+                self.diff_write_in_list( "Number of differences ==> " + 
+                    str( len(erreur))+ " <== ")
+                for i in range( len( erreur)):
+                    self.diff_write_in_list( str( erreur[ i]))
+        else:
+            self.diff_log( " COMPARE>" + "Diff vector/txt: No other option implemented")
+        return

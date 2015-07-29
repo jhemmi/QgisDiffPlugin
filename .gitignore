@@ -5,8 +5,16 @@ __pycache__/
 # C extensions
 *.so
 
+# gedit save
+*~
+
+# doc pour help auto
+help/Makefile
+help/make.bat
+
 # Distribution / packaging
 .Python
+.noseids
 env/
 build/
 develop-eggs/

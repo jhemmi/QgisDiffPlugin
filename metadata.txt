@@ -10,7 +10,7 @@
 name=Diff
 qgisMinimumVersion=2.0
 description=Diff between a vector and a text file
-version=0.1
+version=0.4
 author=jhemmi.eu
 email=jean@jhemmi.eu
 
@@ -22,9 +22,9 @@ email=jean@jhemmi.eu
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=
+tags= diff,vector,csv,testfile separated,difference
 
-homepage=https://github.com/jhemmi/QgisDiffPlugin/wiki/Qgis-Diff-Plugin-wiki
+homepage=https://github.com/jhemmi/QgisDiffPlugin/wiki/Qgis-Diff-Plugin-usage-&-installation
 tracker=https://github.com/jhemmi/QgisDiffPlugin/issues
 repository=https://github.com/jhemmi/QgisDiffPlugin
 category=Plugins
