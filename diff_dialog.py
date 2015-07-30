@@ -69,7 +69,6 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
 ##        # Memorising the project
 ##        titleProject = QgsProject.instance().title()
 ##        filenameProject = QFileInfo( QgsProject.instance().fileName())
-        
         # Creating vector list in combo
         self.create_vector_list()        
         

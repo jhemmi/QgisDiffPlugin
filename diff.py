@@ -29,7 +29,6 @@ from diff_dialog import DiffDialog
 import os
 import os.path
 
-
 class Diff:
     """QGIS Plugin Implementation."""
 
