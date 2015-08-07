@@ -16,6 +16,9 @@ help/make.bat
 .Python
 .noseids
 env/
+# provisoiredata/
+test/
+i
 build/
 develop-eggs/
 dist/
