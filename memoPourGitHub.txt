@@ -14,12 +14,12 @@ git rm Makefile~
 git rm help/Makefile
 
 # pour recuperer des modifs faite directement sous GitHub
-git pull https://github.com/jhemmi/QgisDiffPlugin.git master
+git pull https://github.com/jhemmi/QgisxxPlugin.git master
 
 # donner un commentaire au commit
-git commit
+git commit -m "comment"
 # envoyer au depot
-git push
+git push https://github.com/jhemmi/QgisxxPlugin.git master
 
 et aussi
 git remote -v

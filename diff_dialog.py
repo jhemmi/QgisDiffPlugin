@@ -22,6 +22,7 @@
 """
 from PyQt4 import QtGui, uic  # for Form_class
 from PyQt4.QtCore import *
+from PyQt4.QtCore import QSettings
 from PyQt4.QtGui import *
 from qgis.core import *
 from qgis.gui import *
@@ -54,6 +55,7 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
         self.plugin_dir = os.path.dirname(__file__)  
+
               
         # Slot for boutons 
         self.refreshButton.pressed.connect(self.create_vector_list )
@@ -71,6 +73,7 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
 ##        filenameProject = QFileInfo( QgsProject.instance().fileName())
         # Creating vector list in combo
         self.create_vector_list()        
+
         
     # MESSAGES & LOG
     def diff_message_box( self, text, level ="warning", title="DIFF plugin",):

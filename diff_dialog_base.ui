@@ -45,7 +45,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>30</y>
+     <y>49</y>
      <width>231</width>
      <height>21</height>
     </rect>
@@ -61,7 +61,7 @@
     <rect>
      <x>10</x>
      <y>80</y>
-     <width>171</width>
+     <width>211</width>
      <height>16</height>
     </rect>
    </property>
@@ -72,8 +72,8 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>170</x>
-     <y>220</y>
+     <x>190</x>
+     <y>232</y>
      <width>191</width>
      <height>23</height>
     </rect>
@@ -132,7 +132,7 @@
     <rect>
      <x>270</x>
      <y>80</y>
-     <width>171</width>
+     <width>211</width>
      <height>21</height>
     </rect>
    </property>
@@ -166,9 +166,9 @@
   <widget class="QRadioButton" name="radioButton_1">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>190</y>
-     <width>221</width>
+     <x>20</x>
+     <y>185</y>
+     <width>421</width>
      <height>17</height>
     </rect>
    </property>
@@ -182,9 +182,9 @@
   <widget class="QRadioButton" name="radioButton_2">
    <property name="geometry">
     <rect>
-     <x>250</x>
-     <y>190</y>
-     <width>231</width>
+     <x>20</x>
+     <y>207</y>
+     <width>411</width>
      <height>17</height>
     </rect>
    </property>
@@ -218,8 +218,8 @@
   <widget class="QLineEdit" name="editSeparateur">
    <property name="geometry">
     <rect>
-     <x>410</x>
-     <y>50</y>
+     <x>360</x>
+     <y>49</y>
      <width>51</width>
      <height>20</height>
     </rect>
@@ -251,9 +251,9 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>250</y>
+     <y>265</y>
      <width>521</width>
-     <height>411</height>
+     <height>396</height>
     </rect>
    </property>
    <property name="contextMenuPolicy">
@@ -269,9 +269,9 @@
   <widget class="QPushButton" name="refreshButton">
    <property name="geometry">
     <rect>
-     <x>120</x>
-     <y>10</y>
-     <width>111</width>
+     <x>80</x>
+     <y>27</y>
+     <width>161</width>
      <height>21</height>
     </rect>
    </property>
