@@ -1,3 +1,4 @@
+
 # This file contains metadata for your plugin. Since 
 # version 2.0 of QGIS this is the proper way to supply 
 # information about a plugin. The old method of 
@@ -11,7 +12,7 @@ name=Diff
 qgisMinimumVersion=2.0
 description=Diff between a vector and a text file
 about=Diff Plugin for Qgis helps comparaison of data in a vector versus a text file. You verify which data misses the vector or the text file to be completed.
-version=0.4
+version=1.O
 author=jhemmi.eu
 email=jean@jhemmi.eu
 
@@ -20,7 +21,7 @@ email=jean@jhemmi.eu
 # Recommended items:
 
 # Uncomment the following line and add your changelog:
-# changelog=
+changelog= 1.0 for French translation
 
 # Tags are comma separated with spaces allowed
 tags= diff,vector,csv,testfile separated,difference
@@ -31,7 +32,7 @@ repository=https://github.com/jhemmi/QgisDiffPlugin
 category=Plugins
 icon=icon.png
 # experimental flag
-experimental=True
+experimental=False
 
 # deprecated flag (applies to the whole plugin, not just a single version)
 deprecated=False
