@@ -12,7 +12,7 @@ name=Diff
 qgisMinimumVersion=2.0
 description=Diff between a vector and a text file
 about=Diff Plugin for Qgis helps comparaison of data in a vector versus a text file. You verify which data misses the vector or the text file to be completed.
-version=1.O
+version=1.0
 author=jhemmi.eu
 email=jean@jhemmi.eu
 
