@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>540</width>
-    <height>671</height>
+    <height>742</height>
    </rect>
   </property>
   <property name="font">
@@ -72,9 +72,9 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>232</y>
-     <width>191</width>
+     <x>60</x>
+     <y>294</y>
+     <width>371</width>
      <height>23</height>
     </rect>
    </property>
@@ -140,7 +140,7 @@
     <string>TextFile's field to compare</string>
    </property>
   </widget>
-  <widget class="QComboBox" name="fieldComboOTHER">
+  <widget class="QComboBox" name="fieldComboTEXT">
    <property name="geometry">
     <rect>
      <x>270</x>
@@ -183,7 +183,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>207</y>
+     <y>231</y>
      <width>411</width>
      <height>17</height>
     </rect>
@@ -251,9 +251,9 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>265</y>
+     <y>332</y>
      <width>521</width>
-     <height>396</height>
+     <height>368</height>
     </rect>
    </property>
    <property name="contextMenuPolicy">
@@ -269,14 +269,79 @@
   <widget class="QPushButton" name="refreshButton">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>27</y>
-     <width>161</width>
+     <x>10</x>
+     <y>26</y>
+     <width>231</width>
      <height>21</height>
     </rect>
    </property>
    <property name="text">
     <string>Refresh vectors</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>205</y>
+     <width>251</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Choose another vector's field to show</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="fieldComboTWO">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>205</y>
+     <width>121</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_8">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>253</y>
+     <width>251</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Choose another textfile's field to show</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="fieldComboOTHER">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>252</y>
+     <width>121</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>717</y>
+     <width>211</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+     <italic>true</italic>
+    </font>
+   </property>
+   <property name="text">
+    <string>Diff version 2.0</string>
    </property>
   </widget>
  </widget>

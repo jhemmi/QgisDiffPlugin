@@ -64,7 +64,8 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
         self.buttonBox.button( QDialogButtonBox.Help ).pressed.connect(self.helpRequested)
             
         # Slot for fields & text file
-        self.inputLayerComboONE.currentIndexChanged[int].connect( self.update_field_list )
+        self.inputLayerComboONE.currentIndexChanged[int].connect( self.update_field_list_ONE )
+        self.inputLayerComboONE.currentIndexChanged[int].connect( self.update_field_list_TWO )
         self.toolFileButtonOTHER.pressed.connect( self.input_textfile )  
         self.diff_log( "Your machin runs a " + platform.system() + " operating system")
 
@@ -121,18 +122,56 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
         return layerList
                 
     # FIELDS
-    def update_field_list( self ):
-        """ Create a list of fields for the current vectorin fieldCombo Box"""
+    def update_field_list_ONE( self ):
+        """ Create a list of fields having unique values for the current vector in fieldCombo Box"""
         inputLayer = str(self.inputLayerComboONE.itemText(self.inputLayerComboONE.currentIndex()))
         self.fieldComboONE.clear()
         layer = self.get_layer_by_name( inputLayer )
         if layer is not None:
             self.diff_log( "Look for fields of layer >" + layer.name())
             for index, field in enumerate(layer.dataProvider().fields()):
-                self.fieldComboONE.addItem( str( field.name()) )
+                # Vérifier si les valeurs du field name sont unique
+                valeur_unique = "YES"
+                valeur_dic = {}
+                mon_nom = field.name()
+                #idx = layer.fieldNameIndex(mon_nom)
+                k = 0
+                iter = layer.getFeatures()
+                for feature in iter:
+                    try:
+                        if feature.attributes()[index] == None:
+                            valeur_unique = "NO"
+                        elif valeur_dic.has_key( feature.attributes()[index]) ==1:
+                            valeur_unique = "NO"
+                        else:
+                            valeur_dic[ feature.attributes()[index]] = k
+                    except:
+                        valeur_unique = "NO"
+                    if valeur_unique == "NO":
+                        break
+                    k = k+1
+                    
+                if valeur_unique == "YES":
+                    self.fieldComboONE.addItem( str( field.name()) )
         else:
             self.fieldComboONE.addItem( "No field found")
-            
+
+        
+    def update_field_list_TWO( self ):
+        """ Create a list of fields for the current vector in fieldCombo_TWO Box"""
+        inputLayer = str(self.inputLayerComboONE.itemText(self.inputLayerComboONE.currentIndex()))
+        # Eviter le champ de field ONE
+        aFieldONE = str(self.fieldComboONE.itemText(self.fieldComboONE.currentIndex()))
+        self.fieldComboTWO.clear()
+        layer = self.get_layer_by_name( inputLayer )
+        if layer is not None:
+            self.diff_log( "Look for fields of layer >" + layer.name())
+            for index, field in enumerate(layer.dataProvider().fields()):
+                if ( str( field.name()) != aFieldONE):
+                    self.fieldComboTWO.addItem( str( field.name()) )
+        else:
+            self.fieldComboTWO.addItem( "No field found")
+        
     def get_layer_by_name( self, layerName ):
         layerMap = QgsMapLayerRegistry.instance().mapLayers()
         for name, layer in layerMap.iteritems():
@@ -161,8 +200,10 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
         # Proposing the best separator in dialog
         self.editSeparateur.setText( bestSeparator )
         # and fields names
+        self.fieldComboTEXT.clear()
         self.fieldComboOTHER.clear()
         for i in range( len(fields)):
+            self.fieldComboTEXT.addItem( fields[i] )
             self.fieldComboOTHER.addItem( fields[i] )
 
     def get_file_fields( self, afile ):
@@ -216,7 +257,7 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
             self.diff_log( "Best separator >" + the_separator_print)
         return the_separator, the_separator_print
 
-    def get_file_field_values( self, afile, field, separator):
+    def get_file_field_values( self, afile, field, secondField, separator):
         """Look for a field's values in a text file"""
         a_list = []
 
@@ -231,19 +272,25 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
             if fields_name[ i] == field:
                 pos = i
                 break
+        for j in range( 0, len ( fields_name)):
+            if fields_name[ j] == secondField:
+                posSecond = j
+                break
 
         #self.diff_log( "Field " + field + " is in position " + str( pos))
 
         found = []
+        foundSecond = []
         for a_line in a_list[ 1:]:
             # Look for fields using separator
             fields_val = string.split( a_line[:-1], separator)
             found.append( fields_val[ pos])
+            foundSecond.append( fields_val[ posSecond])
                     
         # Close
         a_file.close()
 
-        return found
+        return found, foundSecond
 
     # Slots
     def helpRequested(self):
@@ -269,9 +316,11 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
           
             self.textEdit.clear()
             oneField = self.fieldComboONE.currentText()
+            secondOneField = self.fieldComboTWO.currentText()
             oneLayer = self.get_layer_by_name( self.inputLayerComboONE.currentText())
             otherFile = self.editOTHERfile.text()
-            otherField = self.fieldComboOTHER.currentText()
+            otherField = self.fieldComboTEXT.currentText()
+            secondOtherField = self.fieldComboOTHER.currentText()
             separator_print = self.editSeparateur.text()
             # Find separator position
             position = SEPARATORS_PRINT.index( separator_print) 
@@ -281,7 +330,8 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
             # QApplication.setOverrideCursor( QCursor( Qt.WaitCursor ) )
             # TODO 
             self.buttonBox.button( QDialogButtonBox.Ok ).setEnabled( False )
-            self.jhemmi_DIFF( oneLayer, oneField, otherFile, otherField, separator)
+            self.jhemmi_DIFF( oneLayer, oneField, secondOneField, 
+                otherFile, otherField, secondOtherField, separator)
             
 ##            self.iface.messageBar().pushMessage(
 ##                "DIFF plugin",
@@ -297,7 +347,7 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
         self.buttonBox.button( QDialogButtonBox.Ok ).setEnabled( True )
         return
     
-    def jhemmi_DIFF( self, layer, field, fileName, fieldInFile, separator):
+    def jhemmi_DIFF( self, layer, field, secondField, fileName, fieldInFile, secondInFile, separator):
         """Real diff is here"""
 
         self.diff_write_in_list( 'Compared fields are "' + field +
@@ -306,12 +356,15 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
         ### Find list of values in one Vector File
         # get unique values in field
         uniqueValues = []
+        secondValues = []
         for ft in layer.getFeatures():
             if ft[ field ] not in uniqueValues:
-                uniqueValues.append( ft[field])
+                uniqueValues.append( ft[ field])
+                secondValues.append( ft[ secondField])
                 
         ### Find list of values in other File
-        fileValues = self.get_file_field_values( fileName, fieldInFile, separator)
+        fileValues, fileSecondValues = self.get_file_field_values( fileName, fieldInFile, \
+                secondInFile, separator)
 
         # Which Radio bouton is checked :  
         if self.radioButton_1.isChecked():
@@ -324,14 +377,18 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
                     #self.diff_log( "Line of vector >" + 
                     #    uniqueValues[iv] + "< is not in file")   
                     apriori = "NON"
-                    erreur.append( str( uniqueValues[iv]))
+                    aText = str( uniqueValues[iv]) + " ~ " + str( secondValues[iv])
+                    # OLD erreur.append( str( uniqueValues[iv]))
+                    erreur.append( aText)
             if apriori == "OUI":
                 self.diff_write_in_list( "All in the Vector are in the TextFile") 
             else:
+                self.diff_write_in_list( 'Second field in vector is "' + secondField + '"')
                 self.diff_write_in_list( "Number of differences ==> " + 
                     str( len(erreur))+ " <== ")
-                for i in range( len( erreur)):
-                    self.diff_write_in_list( str( erreur[ i]))
+                sortie_trie = sorted( erreur)
+                for i in range( len( sortie_trie)):
+                    self.diff_write_in_list( str( sortie_trie[ i]))
           
         elif self.radioButton_2.isChecked():
             # Compare list OTHER NOT in ONE
@@ -343,14 +400,17 @@ class DiffDialog(QtGui.QDialog, FORM_CLASS):
                     #self.diff_log( "Line of file >" + 
                     #    fileValues[iv] + "< is not in vector")   
                     apriori = "NON"
-                    erreur.append( str( fileValues[iv]))
+                    aText = str( fileValues[iv]) + " ~ " + str( fileSecondValues[iv])
+                    erreur.append( aText)
             if apriori == "OUI":
                 self.diff_write_in_list( "All in the TextFile value are in the Vector") 
             else:
+                self.diff_write_in_list( 'Second field in textfile is "' + secondInFile + '"')
                 self.diff_write_in_list( "Number of differences ==> " + 
                     str( len(erreur))+ " <== ")
-                for i in range( len( erreur)):
-                    self.diff_write_in_list( str( erreur[ i]))
+                sortie_trie = sorted( erreur)
+                for i in range( len( sortie_trie)):
+                    self.diff_write_in_list( str( sortie_trie[ i]))
         else:
             self.diff_log( " COMPARE>" + "Diff vector/txt: No other option implemented")
         return

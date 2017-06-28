@@ -19,6 +19,8 @@ env/
 # provisoiredata/
 test/
 i
+.gitignore
+*.zip
 build/
 develop-eggs/
 dist/

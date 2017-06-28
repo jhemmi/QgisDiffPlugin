@@ -5,14 +5,15 @@
 # embedding metadata in __init__.py will 
 # is no longer supported since version 2.0.
 
-# This file should be included when you package your plugin.# Mandatory items:
+# This file should be included when you package your plugin.
+# Mandatory items:
 
 [general]
 name=Diff
-qgisMinimumVersion=2.0
+qgisMinimumVersion=2.4
 description=Diff between a vector and a text file
-about=Diff Plugin for Qgis helps comparaison of data in a vector versus a text file. You verify which data misses the vector or the text file to be completed.
-version=1.0
+about=Diff Plugin for Qgis helps comparaison of data in a vector versus a text file. You verify which data misses the vector or the text file to be complete.
+version=2.0
 author=jhemmi.eu
 email=jean@jhemmi.eu
 
@@ -21,10 +22,11 @@ email=jean@jhemmi.eu
 # Recommended items:
 
 # Uncomment the following line and add your changelog:
-changelog= 1.0 for French translation
+changelog= 1.0 French translation
+changelog= 2.0 List of result is sorted and a second field can be shown 
 
 # Tags are comma separated with spaces allowed
-tags= diff,vector,csv,testfile separated,difference
+tags= diff,vector,csv,textfile separated,difference
 
 homepage=https://github.com/jhemmi/QgisDiffPlugin/wiki/Qgis-Diff-Plugin-usage-&-installation
 tracker=https://github.com/jhemmi/QgisDiffPlugin/issues
